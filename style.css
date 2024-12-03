@@ -1,0 +1,51 @@
+/* style.css */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+#game {
+  display: grid;
+  grid-template-columns: repeat(20, 40px); /* 20 columns */
+  grid-gap: 2px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #999;
+}
+
+.player {
+  background-color: blue;
+}
+
+.box {
+  background-color: orange;
+}
+
+.target {
+  background-color: lightgreen;
+}
+
+.barrier {
+  background-color: black; /* Visual indication of the restricted line */
+}
+.river {
+  background-color: darkblue; /* River color */
+}
+
+.bridge {
+  background-color: brown; /* Bridge (box placed in river) */
+}
+.light {
+  background-color: yellow; /* Light line color */
+}
