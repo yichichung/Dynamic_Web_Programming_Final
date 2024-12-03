@@ -20,7 +20,6 @@ for (let y = 9; y <= 11; y++) {
 
 // Add yellow light line
 for (let x = 13; x <= 18; x++) {
-  // Corrected length and alignment
   grid[7][x] = "L"; // Yellow light cells
 }
 
@@ -36,25 +35,54 @@ grid[12][9] = "T"; // Target below the barrier
 grid[10][7] = "B"; // Box after river
 grid[11][9] = "B"; // Box after river
 grid[11][11] = "B"; // Box after river
-
-// Align right-side elements
-grid[11][14] = "B"; // Box on the right
-grid[13][15] = "T"; // Target near the bottom right
-grid[13][17] = "B"; // Another box near the right
-
 const renderGame = () => {
-  game.innerHTML = "";
+  game.innerHTML = ""; // Clear the game container
   grid.forEach((row, y) => {
     row.forEach((cell, x) => {
       const div = document.createElement("div");
       div.classList.add("cell");
-      if (cell === "P") div.classList.add("player");
-      if (cell === "B") div.classList.add("box");
-      if (cell === "T") div.classList.add("target");
-      if (cell === "|") div.classList.add("barrier");
-      if (cell === "R") div.classList.add("river");
-      if (cell === "BT") div.classList.add("bridge");
-      if (cell === "L") div.classList.add("light"); // Light line cells
+
+      if (cell === "P") {
+        const img = document.createElement("img");
+        img.src = "img/char1.png"; // Path to your player character image
+        img.alt = "Player";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
+      } else if (cell === "B") {
+        const img = document.createElement("img");
+        img.src = "img/box.png"; // Path to your box image
+        img.alt = "Box";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
+      } else if (cell === "R") {
+        const img = document.createElement("img");
+        img.src = "img/river.png"; // Path to your river image
+        img.alt = "River";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
+      } else if (cell === "|") {
+        const img = document.createElement("img");
+        img.src = "img/wall.png"; // Path to your wall image
+        img.alt = "Wall";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
+      } else if (cell === "T") {
+        div.classList.add("target");
+      } else if (cell === "BT") {
+        div.classList.add("bridge");
+      } else if (cell === "L") {
+        const img = document.createElement("img");
+        img.src = "img/fire.png"; // Path to your fire image
+        img.alt = "Fire";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
+      }
+
       game.appendChild(div);
     });
   });
@@ -107,15 +135,20 @@ const movePlayer = (dx, dy) => {
       beyondX < grid[0].length
     ) {
       const beyondCell = grid[beyondY][beyondX];
-      if (beyondCell === " " || beyondCell === "R" || beyondCell === "T") {
+      if (
+        beyondCell === " " ||
+        beyondCell === "R" ||
+        beyondCell === "L" ||
+        beyondCell === "T"
+      ) {
         // Push box
         if (beyondCell === "R") {
           grid[beyondY][beyondX] = "BT"; // Box turns river into bridge
-          // Remove light line when box is placed on river
+        } else if (beyondCell === "L") {
+          grid[beyondY][beyondX] = "BT"; // Box placed on light line
+          // Remove light line when box is placed on it
           for (let x = 13; x <= 18; x++) {
-            if (grid[7][x] === "L") {
-              grid[7][x] = " "; // Remove light cells
-            }
+            grid[7][x] = " "; // Remove all light cells
           }
         } else if (beyondCell === "T") {
           grid[beyondY][beyondX] = "BT"; // Box placed on target
