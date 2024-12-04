@@ -20,7 +20,7 @@ for (let y = 9; y <= 11; y++) {
 
 // Add yellow light line
 for (let x = 13; x <= 18; x++) {
-  grid[7][x] = "L"; // Yellow light cells
+  grid[7][x] = "L"; // Initial fire cells
 }
 
 // Add player and boxes (around the player)
@@ -32,9 +32,10 @@ grid[3][6] = "B"; // Box on the right for variety
 
 // Add targets and more boxes after the river
 grid[12][9] = "T"; // Target below the barrier
-grid[10][7] = "B"; // Box after river
+grid[12][8] = "B"; // Box after river
 grid[11][9] = "B"; // Box after river
-grid[11][11] = "B"; // Box after river
+grid[12][10] = "B"; // Box after river
+
 const renderGame = () => {
   game.innerHTML = ""; // Clear the game container
   grid.forEach((row, y) => {
@@ -145,11 +146,7 @@ const movePlayer = (dx, dy) => {
         if (beyondCell === "R") {
           grid[beyondY][beyondX] = "BT"; // Box turns river into bridge
         } else if (beyondCell === "L") {
-          grid[beyondY][beyondX] = "BT"; // Box placed on light line
-          // Remove light line when box is placed on it
-          for (let x = 13; x <= 18; x++) {
-            grid[7][x] = " "; // Remove all light cells
-          }
+          clearFire(); // Clear all fire cells
         } else if (beyondCell === "T") {
           grid[beyondY][beyondX] = "BT"; // Box placed on target
           alert("You successfully placed the box!");
@@ -164,6 +161,46 @@ const movePlayer = (dx, dy) => {
 
   renderGame();
 };
+// Expand fire every 5 seconds
+const expandFire = () => {
+  const newFirePositions = [];
+  grid.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell === "L") {
+        // Randomly expand fire to adjacent grass cells
+        const directions = [
+          [0, -1], // Up
+          [0, 1], // Down
+          [-1, 0], // Left
+          [1, 0], // Right
+        ];
+        directions.forEach(([dx, dy]) => {
+          const newX = x + dx;
+          const newY = y + dy;
+          if (
+            newX >= 0 &&
+            newX < grid[0].length &&
+            newY >= 0 &&
+            newY < grid.length &&
+            grid[newY][newX] === " "
+          ) {
+            newFirePositions.push([newY, newX]);
+          }
+        });
+      }
+    });
+  });
+
+  // Apply new fire positions
+  newFirePositions.forEach(([y, x]) => {
+    grid[y][x] = "L";
+  });
+
+  renderGame();
+};
+
+// Start expanding fire every 5 seconds
+setInterval(expandFire, 5000);
 
 // Event listener for arrow keys
 document.addEventListener("keydown", (e) => {
@@ -182,6 +219,15 @@ document.addEventListener("keydown", (e) => {
       break;
   }
 });
+const clearFire = () => {
+  grid.forEach((row, y) => {
+    row.forEach((cell, x) => {
+      if (cell === "L") {
+        grid[y][x] = " "; // Clear all fire cells
+      }
+    });
+  });
+};
 
 // Initial render
 renderGame();
