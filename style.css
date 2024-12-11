@@ -85,3 +85,17 @@ body {
   height: 100%;
   object-fit: contain; /* Ensure fire image fits without distortion */
 }
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0); /* Normal position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move up */
+  }
+}
+
+.bouncing {
+  animation: bounce 0.5s infinite; /* Bounce continuously every 0.5 seconds */
+}

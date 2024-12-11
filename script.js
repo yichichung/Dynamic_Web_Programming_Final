@@ -1,24 +1,20 @@
 const game = document.getElementById("game");
 
-// Define a 20x15 grid
 let grid = Array(15)
   .fill(null)
   .map(() => Array(20).fill(" "));
 
-// Add a restricted barrier line (left to middle only)
 const middleRow = Math.floor(grid.length / 2);
 for (let i = 0; i < grid[0].length / 2; i++) {
-  grid[middleRow][i] = "|"; // Block the left half of the middle row
+  grid[middleRow][i] = "|";
 }
 
-// Add river (dark blue rectangle)
 for (let y = 9; y <= 11; y++) {
   for (let x = 0; x <= 6; x++) {
     grid[x][y] = "R"; // River cells
   }
 }
 
-// Add yellow light line
 for (let x = 13; x <= 18; x++) {
   grid[7][x] = "L"; // Initial fire cells
 }
@@ -26,7 +22,7 @@ for (let x = 13; x <= 18; x++) {
 // Add player and boxes (around the player)
 grid[3][2] = "P"; // Player starting position
 grid[2][4] = "B"; // Box above the player
-grid[4][4] = "B"; // Box below the player
+grid[4][4] = "W"; // Box below the player
 grid[3][1] = "B"; // Box to the left of the player
 grid[3][6] = "B"; // Box on the right for variety
 
@@ -87,13 +83,19 @@ const renderGame = () => {
         img.style.width = "100%";
         img.style.height = "100%";
         div.appendChild(img);
+      } else if (cell === "W") {
+        const img = document.createElement("img");
+        img.src = "img/water.png"; // Path to your fire image
+        img.alt = "Water";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
       }
 
       game.appendChild(div);
     });
   });
 };
-
 const movePlayer = (dx, dy) => {
   // Find the player position
   let playerX, playerY;
@@ -129,8 +131,7 @@ const movePlayer = (dx, dy) => {
     alert("You can't step on the target!");
   } else if (targetCell === "|") {
     alert("You can't cross the barrier!");
-  } else if (targetCell === "B") {
-    // Check the next cell beyond the box
+  } else if (targetCell === "B" || targetCell === "W") {
     const beyondX = targetX + dx;
     const beyondY = targetY + dy;
 
@@ -145,18 +146,25 @@ const movePlayer = (dx, dy) => {
         beyondCell === " " ||
         beyondCell === "R" ||
         beyondCell === "L" ||
-        beyondCell === "T"
+        beyondCell === "T" ||
+        beyondCell === "BT" // Allow pushing onto a bridge
       ) {
         // Push box
-        if (beyondCell === "R") {
-          grid[beyondY][beyondX] = "BT"; // Box turns river into bridge
-        } else if (beyondCell === "L") {
-          clearFire(); // Clear all fire cells
-        } else if (beyondCell === "T") {
-          grid[beyondY][beyondX] = "BT"; // Box placed on target
-          alert("You successfully placed the box!");
+        if (targetCell === "W") {
+          if (beyondCell === "L") {
+            clearFire(); // Clear all fire cells
+          } else {
+            grid[beyondY][beyondX] = "W"; // Preserve water box as "W"
+          }
         } else {
-          grid[beyondY][beyondX] = "B";
+          if (beyondCell === "R") {
+            grid[beyondY][beyondX] = "BT"; // Box turns river into bridge
+          } else if (beyondCell === "T") {
+            grid[beyondY][beyondX] = "BT"; // Box placed on target
+            alert("You successfully placed the box!");
+          } else {
+            grid[beyondY][beyondX] = "B";
+          }
         }
         grid[targetY][targetX] = "P";
         grid[playerY][playerX] = grid[playerY][playerX] === "T" ? "T" : " "; // Keep target intact
@@ -166,6 +174,7 @@ const movePlayer = (dx, dy) => {
 
   renderGame();
 };
+
 // Expand fire every 5 seconds
 const expandFire = () => {
   const newFirePositions = [];
