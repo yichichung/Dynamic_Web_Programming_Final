@@ -28,9 +28,7 @@ grid[3][6] = "B"; // Box on the right for variety
 
 // Add targets and more boxes after the river
 grid[12][9] = "T"; // Target below the barrier
-grid[12][8] = "B"; // Box after river
-grid[11][9] = "B"; // Box after river
-grid[12][10] = "B"; // Box after river
+grid[13][5] = "K"; // Box after river
 
 const renderGame = () => {
   game.innerHTML = ""; // Clear the game container
@@ -90,6 +88,13 @@ const renderGame = () => {
         img.style.width = "100%";
         img.style.height = "100%";
         div.appendChild(img);
+      } else if (cell === "K") {
+        const img = document.createElement("img");
+        img.src = "img/basket.png"; // Path to your box image
+        img.alt = "Basket";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
       }
 
       game.appendChild(div);
@@ -131,7 +136,7 @@ const movePlayer = (dx, dy) => {
     alert("You can't step on the target!");
   } else if (targetCell === "|") {
     alert("You can't cross the barrier!");
-  } else if (targetCell === "B" || targetCell === "W") {
+  } else if (targetCell === "B" || targetCell === "W" || targetCell == "K") {
     const beyondX = targetX + dx;
     const beyondY = targetY + dy;
 
@@ -153,19 +158,28 @@ const movePlayer = (dx, dy) => {
         if (targetCell === "W") {
           if (beyondCell === "L") {
             clearFire(); // Clear all fire cells
+          } else if (beyondCell == "R") {
+            alert("OOPS! you push the water to the river! you lose!");
           } else {
             grid[beyondY][beyondX] = "W"; // Preserve water box as "W"
           }
-        } else {
+        } else if (targetCell == "B") {
           if (beyondCell === "R") {
             grid[beyondY][beyondX] = "BT"; // Box turns river into bridge
-          } else if (beyondCell === "T") {
-            grid[beyondY][beyondX] = "BT"; // Box placed on target
-            alert("You successfully placed the box!");
           } else {
             grid[beyondY][beyondX] = "B";
           }
+        } else if (targetCell === "K") {
+          if (beyondCell === "T") {
+            grid[beyondY][beyondX] = "KT"; // Basket placed on the cat
+            alert("You successfully placed the basket on the cat!");
+          } else if (beyondCell === " ") {
+            grid[beyondY][beyondX] = "K"; // Move the basket to an empty space
+          }
+          grid[targetY][targetX] = "P";
+          grid[playerY][playerX] = grid[playerY][playerX] === "T" ? "T" : " "; // Keep target intact
         }
+
         grid[targetY][targetX] = "P";
         grid[playerY][playerX] = grid[playerY][playerX] === "T" ? "T" : " "; // Keep target intact
       }
@@ -175,9 +189,10 @@ const movePlayer = (dx, dy) => {
   renderGame();
 };
 
-// Expand fire every 5 seconds
 const expandFire = () => {
   const newFirePositions = [];
+  let catTouched = false;
+
   grid.forEach((row, y) => {
     row.forEach((cell, x) => {
       if (cell === "L") {
@@ -195,10 +210,15 @@ const expandFire = () => {
             newX >= 0 &&
             newX < grid[0].length &&
             newY >= 0 &&
-            newY < grid.length &&
-            grid[newY][newX] === " "
+            newY < grid.length
           ) {
-            newFirePositions.push([newY, newX]);
+            if (grid[newY][newX] === "T") {
+              // Fire touches the cat
+              catTouched = true;
+            } else if (grid[newY][newX] === " ") {
+              // Fire expands to an empty cell
+              newFirePositions.push([newY, newX]);
+            }
           }
         });
       }
@@ -210,6 +230,9 @@ const expandFire = () => {
     grid[y][x] = "L";
   });
 
+  if (catTouched) {
+    alert("You didn't save the cat on time! You lose!");
+  }
   renderGame();
 };
 
