@@ -72,7 +72,12 @@ const renderGame = () => {
         img.style.height = "100%";
         div.appendChild(img);
       } else if (cell === "T") {
-        div.classList.add("target");
+        const img = document.createElement("img");
+        img.src = "img/cat.png"; // Path to your cat image
+        img.alt = "Cat";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        div.appendChild(img);
       } else if (cell === "BT") {
         div.classList.add("bridge");
       } else if (cell === "L") {
