@@ -1,5 +1,7 @@
 const game = document.getElementById("game");
 let isGameStarted = false;
+let startTime = null; // Timer start time
+let endTime = null; // Timer end time
 
 let grid = Array(15)
   .fill(null)
@@ -22,6 +24,7 @@ for (let x = 13; x <= 18; x++) {
 document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById("intro").style.display = "none";
   isGameStarted = true;
+  startTime = Date.now(); // Start the timer
   renderGame();
 });
 
@@ -173,6 +176,9 @@ const movePlayer = (dx, dy) => {
         } else if (targetCell === "K") {
           if (beyondCell === "T") {
             grid[beyondY][beyondX] = "KT";
+            endTime = Date.now(); // Stop the timer
+            const elapsedTime = (endTime - startTime) / 1000;
+            console.log(elapsedTime);
             alert("You successfully placed the basket on the cat!");
           } else if (beyondCell === " ") {
             grid[beyondY][beyondX] = "K";
@@ -227,7 +233,6 @@ const expandFire = () => {
     });
   });
 
-  // Apply new fire positions
   newFirePositions.forEach(([y, x]) => {
     grid[y][x] = "L";
   });
