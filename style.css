@@ -4,41 +4,96 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-color: #f0f0f0; /* Fallback background color */
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1000;
+}
+
+.intro-overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.intro-overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.intro-overlay button {
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background-color: #382711;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.intro-overlay button:hover {
+  background-color: #aea56a;
 }
 
 #game {
   display: grid;
-  grid-template-columns: repeat(20, 1fr); /* Scale columns proportionally */
-  grid-template-rows: repeat(15, 1fr); /* Scale rows proportionally */
-  aspect-ratio: 20 / 15; /* Maintain the 20x15 aspect ratio */
-  width: 800px; /* Fixed width to ensure consistent size */
-  height: auto; /* Allow the height to adjust automatically to maintain the ratio */
-  background-image: url("img/bg.jpg"); /* Add background image */
-  background-size: cover; /* Ensure the background covers the entire area */
-  background-position: center; /* Center the background image */
-  z-index: 1; /* Ensure grid is above the background */
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  aspect-ratio: 20 / 15;
+  width: 90%;
+  max-width: 800px;
+  height: auto;
+  background-image: url("img/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  border: 5px solid #333;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .cell {
-  width: 100%; /* Automatically scale with the grid */
-  height: 100%; /* Automatically scale with the grid */
-  background-color: transparent; /* Make cells transparent */
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box; /* Include padding and borders in dimensions */
-  z-index: 2; /* Ensure cells are above the background */
+  box-sizing: border-box;
+  z-index: 2;
 }
 
 .cell img {
-  width: 100%; /* Scale the image to fit the cell */
-  height: 100%; /* Scale the image to fit the cell */
-  object-fit: contain; /* Ensure images fit properly without distortion */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.cell img:hover {
+  transform: scale(1.1);
 }
 
 .player {
-  z-index: 3; /* Ensure player is above everything else */
+  z-index: 3;
 }
 
 .box {
@@ -46,16 +101,21 @@ body {
 }
 
 .target {
-  background-color: lightgreen; /* Distinctive color for the target */
-  border: 2px solid green; /* Add a visible border to make it stand out */
-  border-radius: 50%; /* Optional: make it circular */
-  width: 100%; /* Ensure it fills the cell */
-  height: 100%; /* Ensure it fills the cell */
-  display: flex; /* Center its content (if any) */
+  background-color: lightgreen;
+  border: 2px solid green;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2; /* Ensure it appears above the cell background but below the player and boxes */
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Optional: glowing effect for visibility */
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+  transition: box-shadow 0.3s;
+}
+
+.target:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 1);
 }
 
 .barrier {
@@ -83,19 +143,20 @@ body {
 .light img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensure fire image fits without distortion */
+  object-fit: contain;
 }
 
+/* Animation: Bounce */
 @keyframes bounce {
   0%,
   100% {
-    transform: translateY(0); /* Normal position */
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px); /* Move up */
+    transform: translateY(-10px);
   }
 }
 
 .bouncing {
-  animation: bounce 0.5s infinite; /* Bounce continuously every 0.5 seconds */
+  animation: bounce 0.5s infinite;
 }
