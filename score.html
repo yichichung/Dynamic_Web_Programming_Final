@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Ranking</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url("northpole.webp") no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .ranking-container {
+        width: 90%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .ranking-row {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+      }
+
+      .ranking-box {
+        width: 140px;
+        height: 125px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        opacity: 0;
+        position: relative;
+        animation: dropIn 1s ease-out forwards;
+      }
+
+      .ranking-row:first-child .ranking-box {
+        width: 170px;
+        height: 150px;
+        font-size: 1.5em;
+      }
+
+      .ranking-row:nth-child(2) .ranking-box {
+        width: 150px;
+        height: 130px;
+      }
+
+      .ranking-item:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+
+      .ranking-item:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .ranking-item:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .ranking-item:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .ranking-item:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+
+      @keyframes dropIn {
+        0% {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .username {
+        font-weight: bold;
+        color: #333333;
+        font-size: 1.2em;
+      }
+
+      .score {
+        font-size: 1em;
+        color: #666666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ranking-container">
+      <div class="ranking-row">
+        <div class="ranking-box">
+          <div class="username">Player1</div>
+          <div class="score">1200</div>
+        </div>
+      </div>
+
+      <div class="ranking-row">
+        <div class="ranking-box">
+          <div class="username">Player2</div>
+          <div class="score">1100</div>
+        </div>
+        <div class="ranking-box">
+          <div class="username">Player3</div>
+          <div class="score">1050</div>
+        </div>
+      </div>
+
+      <div class="ranking-row">
+        <div class="ranking-box">
+          <div class="username">Player4</div>
+          <div class="score">950</div>
+        </div>
+        <div class="ranking-box">
+          <div class="username">Player5</div>
+          <div class="score">900</div>
+        </div>
+        <div class="ranking-box">
+          <div class="username">Player6</div>
+          <div class="score">850</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
